@@ -1,0 +1,33 @@
+.app {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 60px 1fr;
+  grid-template-areas:
+    "navbar navbar"
+    "sidebar main"
+    "footer footer";
+  min-height: 100vh;
+}
+
+.app > nav {
+  grid-area: navbar;
+}
+
+.app-body {
+  display: contents;
+}
+
+.app-body > aside {
+  grid-area: sidebar;
+}
+
+.main-content {
+  grid-area: main;
+  padding: 0; /* Remove all padding */
+  background-color: #f5f5f5;
+  overflow: auto;
+}
+
+.app > footer {
+  grid-area: footer;
+}
