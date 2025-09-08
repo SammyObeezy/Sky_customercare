@@ -116,7 +116,7 @@ const TicketList: React.FC = () => {
           <div className="ticket-content-layout">
             {/* Left Sidebar - Filters */}
             <div className="ticket-filter-sidebar">
-              <h3 className="filter-title">All Tickets</h3>
+             
 
               <div className="filter-list">
                 <button

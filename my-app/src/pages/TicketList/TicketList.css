@@ -169,9 +169,10 @@
 }
 
 .status-dot {
-  width: 12px;
-  height: 12px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
+  border-radius: 5px;
 }
 
 .status-open { background-color: #f39c12; }
