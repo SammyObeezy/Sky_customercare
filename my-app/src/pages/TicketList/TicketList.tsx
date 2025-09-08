@@ -70,9 +70,7 @@ const TicketList: React.FC = () => {
       size: 120,
       align: 'center',
       render: (row) => (
-        <span className={`status-badge status-${row.ticketStatus.toLowerCase().replace(' ', '-')}`}>
-          {row.ticketStatus}
-        </span>
+        <span>{row.ticketStatus}</span>
       )
     },
     {
@@ -97,7 +95,7 @@ const TicketList: React.FC = () => {
     <div className="ticket-list-page">
       {/* Tab Navigation */}
       <div className="ticket-tabs">
-        <button 
+        <button
           className={`tab-button ${activeTab === 'all-tickets' ? 'active' : ''}`}
           onClick={() => setActiveTab('all-tickets')}
         >
@@ -119,9 +117,9 @@ const TicketList: React.FC = () => {
             {/* Left Sidebar - Filters */}
             <div className="ticket-filter-sidebar">
               <h3 className="filter-title">All Tickets</h3>
-              
+
               <div className="filter-list">
-                <button 
+                <button
                   className={`filter-item ${activeFilter === 'all' ? 'active' : ''}`}
                   onClick={() => setActiveFilter('all')}
                 >
@@ -129,8 +127,8 @@ const TicketList: React.FC = () => {
                   <span>All</span>
                   <span className="count">0</span>
                 </button>
-                
-                <button 
+
+                <button
                   className={`filter-item ${activeFilter === 'open' ? 'active' : ''}`}
                   onClick={() => setActiveFilter('open')}
                 >
@@ -138,8 +136,8 @@ const TicketList: React.FC = () => {
                   <span>Open</span>
                   <span className="count">0</span>
                 </button>
-                
-                <button 
+
+                <button
                   className={`filter-item ${activeFilter === 'in-progress' ? 'active' : ''}`}
                   onClick={() => setActiveFilter('in-progress')}
                 >
@@ -147,8 +145,8 @@ const TicketList: React.FC = () => {
                   <span>In Progress</span>
                   <span className="count">0</span>
                 </button>
-                
-                <button 
+
+                <button
                   className={`filter-item ${activeFilter === 'resolved' ? 'active' : ''}`}
                   onClick={() => setActiveFilter('resolved')}
                 >
@@ -156,8 +154,8 @@ const TicketList: React.FC = () => {
                   <span>Resolved</span>
                   <span className="count">0</span>
                 </button>
-                
-                <button 
+
+                <button
                   className={`filter-item ${activeFilter === 'closed' ? 'active' : ''}`}
                   onClick={() => setActiveFilter('closed')}
                 >
@@ -165,8 +163,8 @@ const TicketList: React.FC = () => {
                   <span>Closed</span>
                   <span className="count">0</span>
                 </button>
-                
-                <button 
+
+                <button
                   className={`filter-item ${activeFilter === 'dropped' ? 'active' : ''}`}
                   onClick={() => setActiveFilter('dropped')}
                 >
@@ -174,8 +172,8 @@ const TicketList: React.FC = () => {
                   <span>Dropped</span>
                   <span className="count">0</span>
                 </button>
-                
-                <button 
+
+                <button
                   className={`filter-item ${activeFilter === 'on-hold' ? 'active' : ''}`}
                   onClick={() => setActiveFilter('on-hold')}
                 >
