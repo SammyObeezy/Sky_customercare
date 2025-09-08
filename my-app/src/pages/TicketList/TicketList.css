@@ -2,15 +2,15 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  margin: 0; /* Remove any margin */
-  padding: 0; /* Remove any padding */
+  margin: 0;
+  padding: 0;
 }
 
 /* Tab Navigation - Aligned with content below */
 .ticket-tabs {
   display: grid;
   grid-template-columns: 250px 1fr;
-  margin: 0; /* Remove margin */
+  margin: 0;
 }
 
 .tab-button {
@@ -21,7 +21,7 @@
   cursor: pointer;
   font-size: 1rem;
   font-weight: 500;
-  color: #495057;
+  color: #135764;
   transition: all 0.2s;
   text-align: left;
 }
@@ -30,20 +30,56 @@
   border-right: 1px solid #dee2e6;
 }
 
-.tab-button:last-child {
-  /* No border-radius */
-}
-
 .tab-button:hover {
   background: #e9ecef;
 }
 
 .tab-button.active {
   background: white;
-  color: #2c3e50;
+  color: #135764;
   border-bottom: 1px solid white;
   position: relative;
   z-index: 1;
+}
+
+/* Tab Header Section - Houses the title and Add Ticket button */
+.tab-header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-bottom: none;
+  border-left: none;
+  padding: 1rem 1.5rem;
+}
+
+.tab-header-section h2 {
+  margin: 0;
+  color: #135764;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.add-ticket-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #144D5A;
+  border-radius: 5px;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+  text-decoration: none;
+}
+
+.add-ticket-btn:hover {
+  background-color: #0f3a44;
+  color: white;
 }
 
 /* Tab Content */
@@ -64,7 +100,7 @@
 
 /* Filter Sidebar */
 .ticket-filter-sidebar {
-  background: #f8f9fa;
+  background: #E3E3E3;
   border-right: 1px solid #dee2e6;
   padding: 1.5rem;
 }
@@ -144,51 +180,17 @@
 .status-dropped { background-color: #e74c3c; }
 .status-on-hold { background-color: #95a5a6; }
 
-/* Table Section */
+/* Table Section - Just houses the table */
 .ticket-table-section {
   display: flex;
   flex-direction: column;
-  padding: 1.5rem;
-}
-
-.table-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.table-header h2 {
-  margin: 0;
-  color: #2c3e50;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.add-ticket-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: #27ae60;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.2s;
-  text-decoration: none;
-}
-
-.add-ticket-btn:hover {
-  background-color: #219a52;
-  color: white;
+  background-color: #F7FCFD;
 }
 
 .ticket-table-container {
   flex: 1;
   overflow: hidden;
+  padding: 1.5rem;
 }
 
 /* Status badge styles for table */
@@ -223,17 +225,14 @@
   border: 1px solid #99d6ff;
 }
 
-/* Placeholder for second tab */
-.placeholder-content {
-  padding: 2rem;
-  text-align: center;
-  color: #6c757d;
-  grid-column: 1 / -1;
-}
-
 @media (max-width: 768px) {
   .ticket-tabs {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+  }
+  
+  .tab-header-section {
+    border-left: 1px solid #dee2e6;
   }
   
   .ticket-content-layout {

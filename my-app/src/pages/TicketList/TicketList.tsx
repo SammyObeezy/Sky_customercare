@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import TableManager, { TableColumn } from '../../components/TableManager/TableManager'; // Remove TableAction import
+import { StarIcon, AddIcon } from '../../components/Icons';
+import TableManager, { TableColumn } from '../../components/TableManager/TableManager';
 import './TicketList.css';
 
-// Mock data (keep the same)
+// Mock data
 const mockTickets = [
   {
     id: 1,
@@ -39,7 +40,7 @@ const TicketList: React.FC = () => {
   const [activeTab, setActiveTab] = useState('all-tickets');
   const [activeFilter, setActiveFilter] = useState('all');
 
-  // Define table columns (keep the same)
+  // Define table columns
   const columns: TableColumn[] = [
     {
       id: 'id',
@@ -54,7 +55,7 @@ const TicketList: React.FC = () => {
       caption: 'Ticket Subject',
       filterable: true,
       sortable: true,
-      size: 60,
+      size: 300,
       render: (row) => (
         <a href={`/ticket/${row.id}`} style={{ color: '#3498db', textDecoration: 'underline' }}>
           {row.ticketSubject}
@@ -92,8 +93,6 @@ const TicketList: React.FC = () => {
     }
   ];
 
-  // Remove the actions array completely
-
   return (
     <div className="ticket-list-page">
       {/* Tab Navigation */}
@@ -104,12 +103,13 @@ const TicketList: React.FC = () => {
         >
           All Tickets
         </button>
-        <button 
-          className={`tab-button ${activeTab === 'all-tickets-2' ? 'active' : ''}`}
-          onClick={() => setActiveTab('all-tickets-2')}
-        >
-          All Tickets
-        </button>
+        <div className="tab-header-section">
+          <h2>All Tickets</h2>
+          <Link to="/add-ticket" className="add-ticket-btn">
+            <AddIcon />
+            Add Ticket
+          </Link>
+        </div>
       </div>
 
       {/* Tab Content */}
@@ -125,9 +125,7 @@ const TicketList: React.FC = () => {
                   className={`filter-item ${activeFilter === 'all' ? 'active' : ''}`}
                   onClick={() => setActiveFilter('all')}
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/>
-                  </svg>
+                  <StarIcon />
                   <span>All</span>
                   <span className="count">0</span>
                 </button>
@@ -188,37 +186,17 @@ const TicketList: React.FC = () => {
               </div>
             </div>
 
-            {/* Right Side - Table with Header */}
+            {/* Right Side - Just the Table */}
             <div className="ticket-table-section">
-              <div className="table-header">
-                <h2>All Tickets</h2>
-                <Link to="/add-ticket" className="add-ticket-btn">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                  Add Ticket
-                </Link>
-              </div>
-
               <div className="ticket-table-container">
                 <TableManager
                   data={mockTickets}
                   columns={columns}
-                  // Remove actions prop completely
                   rowsPerPage={8}
                   emptyMessage="No tickets found."
                   className="tickets-table-manager"
                 />
               </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'all-tickets-2' && (
-          <div className="ticket-content-layout">
-            <div className="placeholder-content">
-              <h2>Second All Tickets Tab</h2>
-              <p>Content for the second tab goes here...</p>
             </div>
           </div>
         )}

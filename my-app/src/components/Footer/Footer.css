@@ -1,29 +1,28 @@
 .footer {
   grid-area: footer;
-  background-color: #e3f2fd; /* Pale blue color */
-  color: #1565c0; /* Darker blue text for contrast */
+  background-color: #E0E9EB; 
+  color: #1565c0; 
   padding: 1rem;
-  border-top: 1px solid #bbdefb; /* Slightly darker blue border */
 }
 
 .footer-left {
   display: flex;
   align-items: center;
-  gap: 2rem; /* Space between the two items */
+  gap: 2rem; 
 }
 
 .footer-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem; /* Space between icon and text */
+  gap: 0.5rem; 
 }
 
 .footer-item span {
   font-size: 0.9rem;
   font-weight: 500;
-  color: #1565c0;
+  color: #144D5A;
 }
 
 .footer-item svg {
-  flex-shrink: 0; /* Prevent icons from shrinking */
+  flex-shrink: 0;
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSidebar } from '../../contexts/SidebarContext';
-import { SupportIcon, SearchIcon, AddIcon, NotificationIcon, UserIcon } from '../Icons';
+import { SupportIcon, SearchIcon, AddIcon, NotificationIcon, SelectDropdownIcon, UserIcon } from '../Icons';
 import './NavBar.css';
 
 const NavBar: React.FC = () => {
@@ -17,13 +17,13 @@ const NavBar: React.FC = () => {
       <div className="navbar-main">
         <div className="navbar-left">
           <div className="navbar-brand">
-            
+
             <span className="brand-text">Help Desk - Sky World Limited</span>
             <span className="version-badge">VENDOR</span>
           </div>
         </div>
 
-       
+
 
         <div className="navbar-right">
           <Link to="/add-ticket" className="nav-button" title="Add new">
@@ -35,12 +35,17 @@ const NavBar: React.FC = () => {
           </button>
 
           <div className="company-selector">
-            <select className="company-select">
-              <option value="skyworld">Amstar SACCO Limited</option>
-              <option value="other">Other Company</option>
-            </select>
+            <div className="custom-select">
+              <span className="company-name">Amstar SACCO Limited</span>
+              <div className="select-icon">
+                <SelectDropdownIcon />
+              </div>
+              <select className="company-select">
+                <option value="skyworld">Amstar SACCO Limited</option>
+                <option value="other">Other Company</option>
+              </select>
+            </div>
           </div>
-
           <button className="nav-button" title="Notifications">
             <NotificationIcon />
           </button>
