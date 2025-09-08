@@ -26,7 +26,7 @@ const SideBar: React.FC = () => {
           title="All Tickets"
         >
           <TicketsIcon />
-          {!isCollapsed && <span className="nav-text">All Tickets</span>}
+          {!isCollapsed && <span className="nav-text">Dashboard</span>}
         </Link>
 
         <Link
@@ -45,11 +45,11 @@ const SideBar: React.FC = () => {
 
         <div className="nav-item" title="Users">
           <OfficeIcon />
-          {!isCollapsed && <span className="nav-text">Offices</span>}
+          {!isCollapsed && <span className="nav-text">Calender</span>}
         </div>
         <div className="nav-item" title="Users">
           <UsersIcon />
-          {!isCollapsed && <span className="nav-text">Users</span>}
+          {!isCollapsed && <span className="nav-text">Tasks</span>}
         </div>
 
         <div className="nav-item" title="Settings">
