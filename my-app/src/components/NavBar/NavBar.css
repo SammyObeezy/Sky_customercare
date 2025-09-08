@@ -6,13 +6,40 @@
 }
 
 .navbar-support {
-  width: 60px; /* Same width as sidebar */
   display: flex;
   align-items: center;
   justify-content: center;
-  border-right: 1px solid #34495e;
-  border-bottom: 1px solid #34495e;
-  padding: 0.5rem 0;
+  border-right: 3px solid #ffff;
+  border-bottom: 2px solid #ffff;
+  padding: 0.5rem;
+  transition: width 0.3s ease;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+
+.navbar-support.collapsed {
+  width: 43px;
+  justify-content: center;
+}
+
+.navbar-support.expanded {
+  width: 175px;
+  justify-content: flex-start;
+  padding-left: 1rem;
+}
+
+.support-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.navbar-support.collapsed .support-text {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
 }
 
 .navbar-main {

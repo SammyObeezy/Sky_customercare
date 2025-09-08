@@ -1,58 +1,105 @@
 .sidebar {
   grid-area: sidebar;
-  width: 60px;
   background-color: #2c3e50;
   color: white;
   padding: 1rem 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Space between top nav and bottom icon */
+  justify-content: space-between;
+  transition: width 0.3s ease;
+  overflow: hidden;
+}
+
+.sidebar.collapsed {
+  width: 60px;
+}
+
+.sidebar.expanded {
+  width: 200px;
 }
 
 .sidebar-nav {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  align-items: center;
+  align-items: stretch;
+  padding: 0 0.5rem;
 }
 
 .sidebar-bottom {
   display: flex;
   justify-content: center;
-  padding-bottom: 0.5rem;
+  padding: 0 0.5rem 0.5rem 0.5rem;
 }
 
-.nav-icon {
+.nav-item {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
+  gap: 0.75rem;
+  padding: 0.75rem;
   color: #bdc3c7;
   text-decoration: none;
   border-radius: 8px;
   transition: all 0.2s;
   cursor: pointer;
   position: relative;
+  min-height: 44px;
+  white-space: nowrap;
 }
 
-.nav-icon:hover {
+.nav-item:hover {
   background-color: #34495e;
   color: white;
 }
 
-.nav-icon.active {
+.nav-item.active {
   background-color: #3498db;
   color: white;
 }
 
-.nav-icon svg {
+.nav-item svg {
   width: 20px;
   height: 20px;
+  flex-shrink: 0;
 }
 
-/* Tooltip on hover */
-.nav-icon::after {
+.nav-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed .nav-text {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.collapse-btn {
+  background: none;
+  border: none;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.sidebar.collapsed .nav-item {
+  justify-content: center;
+  padding: 0.75rem 0.5rem;
+}
+
+.sidebar.expanded .nav-item {
+  justify-content: flex-start;
+  padding: 0.75rem;
+}
+
+/* Remove tooltip when expanded since we show text */
+.sidebar.expanded .nav-item::after {
+  display: none;
+}
+
+/* Only show tooltip when collapsed */
+.sidebar.collapsed .nav-item::after {
   content: attr(title);
   position: absolute;
   left: 60px;
@@ -71,7 +118,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.nav-icon:hover::after {
+.sidebar.collapsed .nav-item:hover::after {
   opacity: 1;
   visibility: visible;
 }
