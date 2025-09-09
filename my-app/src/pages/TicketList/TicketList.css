@@ -63,17 +63,14 @@
 }
 
 .add-ticket-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   background-color: #144D5A;
   border-radius: 5px;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 1.5rem;
   cursor: pointer;
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: 1rem;
   transition: background-color 0.2s;
   text-decoration: none;
 }
@@ -174,13 +171,14 @@
   flex-shrink: 0;
   border-radius: 5px;
 }
+.status-all { background-color: #1098AD; }
+.status-open { background-color: #FD7E14; }
+.status-in-progress { background-color: #1C7ED6; }
+.status-resolved { background-color: #37B24D; }
+.status-closed { background-color: #37B24D; }
+.status-dropped { background-color: #F03E3E; }
+.status-on-hold { background-color: #5C5F66; }
 
-.status-open { background-color: #f39c12; }
-.status-in-progress { background-color: #3498db; }
-.status-resolved { background-color: #27ae60; }
-.status-closed { background-color: #2ecc71; }
-.status-dropped { background-color: #e74c3c; }
-.status-on-hold { background-color: #95a5a6; }
 
 /* Table Section - Just houses the table */
 .ticket-table-section {

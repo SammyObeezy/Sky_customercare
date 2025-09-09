@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { StarIcon, AddIcon } from '../../components/Icons';
 import TableManager, { TableColumn } from '../../components/TableManager/TableManager';
 import './TicketList.css';
 
@@ -104,7 +103,6 @@ const TicketList: React.FC = () => {
         <div className="tab-header-section">
           <h2>All Tickets</h2>
           <Link to="/add-ticket" className="add-ticket-btn">
-            <AddIcon />
             Add Ticket
           </Link>
         </div>
@@ -123,7 +121,7 @@ const TicketList: React.FC = () => {
                   className={`filter-item ${activeFilter === 'all' ? 'active' : ''}`}
                   onClick={() => setActiveFilter('all')}
                 >
-                  <StarIcon />
+                   <div className="status-dot status-all"></div>
                   <span>All</span>
                   <span className="count">0</span>
                 </button>
