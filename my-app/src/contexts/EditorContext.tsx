@@ -1,96 +1,118 @@
-import React, { createContext, useContext, useState, useRef, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode } from 'react';
+import { useEditor, Editor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import TextAlign from '@tiptap/extension-text-align';
+import Superscript from '@tiptap/extension-superscript';
+import Subscript from '@tiptap/extension-subscript';
+import Link from '@tiptap/extension-link';
+import Placeholder from '@tiptap/extension-placeholder';
 
 interface EditorContextType {
-  editorRef: React.RefObject<HTMLDivElement>;
+  editor: Editor | null;
   applyFormatting: (formatType: string) => void;
-  editorValue: string;
-  setEditorValue: (value: string) => void;
 }
 
 const EditorContext = createContext<EditorContextType | undefined>(undefined);
 
 export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const editorRef = useRef<HTMLDivElement>(null);
-  const [editorValue, setEditorValue] = useState('');
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+      }),
+      Superscript,
+      Subscript,
+      Link.configure({
+        openOnClick: false,
+      }),
+      Placeholder.configure({
+        placeholder: `Addition of the following features to the mobile banking platform
+a. Loan Application. (Loanee)
+b. Request Loan Guarantorship. With the ability to add or remove guarantors. (Loanee)
+c. Ability to Accept, Reject or Amend the Guaranteed amount. (Guarantor)
+d. View Loan Guarantors. (Loanee)
+e. View Loans Guaranteed. (Guarantor)
+f. View Loan Status i.e. No. of Guarantors, Approved, Rejected. (Loanee)`,
+      }),
+    ],
+    content: '',
+    editorProps: {
+      attributes: {
+        class: 'rich-text-editor-content',
+      },
+    },
+  });
 
   const applyFormatting = (formatType: string) => {
-    const editor = editorRef.current;
     if (!editor) return;
-
-    editor.focus();
 
     switch (formatType) {
       case 'bold':
-        document.execCommand('bold', false);
+        editor.chain().focus().toggleBold().run();
         break;
       case 'italic':
-        document.execCommand('italic', false);
+        editor.chain().focus().toggleItalic().run();
         break;
       case 'underline':
-        document.execCommand('underline', false);
+        editor.chain().focus().toggleUnderline().run();
         break;
       case 'strikethrough':
-        document.execCommand('strikeThrough', false);
+        editor.chain().focus().toggleStrike().run();
         break;
       case 'heading1':
-        document.execCommand('formatBlock', false, '<h1>');
+        editor.chain().focus().toggleHeading({ level: 1 }).run();
         break;
       case 'heading2':
-        document.execCommand('formatBlock', false, '<h2>');
+        editor.chain().focus().toggleHeading({ level: 2 }).run();
         break;
       case 'heading3':
-        document.execCommand('formatBlock', false, '<h3>');
+        editor.chain().focus().toggleHeading({ level: 3 }).run();
         break;
       case 'heading4':
-        document.execCommand('formatBlock', false, '<h4>');
+        editor.chain().focus().toggleHeading({ level: 4 }).run();
         break;
       case 'bulletList':
-        document.execCommand('insertUnorderedList', false);
+        editor.chain().focus().toggleBulletList().run();
         break;
       case 'numberedList':
-        document.execCommand('insertOrderedList', false);
+        editor.chain().focus().toggleOrderedList().run();
         break;
       case 'link':
         const url = prompt('Enter URL:');
         if (url) {
-          document.execCommand('createLink', false, url);
+          editor.chain().focus().setLink({ href: url }).run();
         }
         break;
       case 'quote':
-        document.execCommand('formatBlock', false, '<blockquote>');
+        editor.chain().focus().toggleBlockquote().run();
         break;
       case 'code':
-        document.execCommand('formatBlock', false, '<code>');
+        editor.chain().focus().toggleCode().run();
         break;
       case 'superscript':
-        document.execCommand('superscript', false);
+        editor.chain().focus().toggleSuperscript().run();
         break;
       case 'subscript':
-        document.execCommand('subscript', false);
+        editor.chain().focus().toggleSubscript().run();
         break;
       case 'alignLeft':
-        document.execCommand('justifyLeft', false);
+        editor.chain().focus().setTextAlign('left').run();
         break;
       case 'alignCenter':
-        document.execCommand('justifyCenter', false);
+        editor.chain().focus().setTextAlign('center').run();
         break;
       case 'alignRight':
-        document.execCommand('justifyRight', false);
+        editor.chain().focus().setTextAlign('right').run();
         break;
       default:
         break;
     }
-
-    const newValue = editor.innerHTML;
-    setEditorValue(newValue);
   };
 
-  // Create the context value with a non-null assertion since we know it's safe
   const contextValue: EditorContextType = {
-    editorRef: editorRef as React.RefObject<HTMLDivElement>,
+    editor,
     applyFormatting,
-    editorValue,
-    setEditorValue
   };
 
   return (
@@ -100,10 +122,10 @@ export const EditorProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   );
 };
 
-export const useEditor = () => {
+export const useEditorContext = () => {
   const context = useContext(EditorContext);
   if (context === undefined) {
-    throw new Error('useEditor must be used within an EditorProvider');
+    throw new Error('useEditorContext must be used within an EditorProvider');
   }
   return context;
 };
