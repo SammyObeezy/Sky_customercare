@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { SidebarProvider } from './contexts/SidebarContext';
 import { UserProvider } from './contexts/UserContext';
 import { EditorProvider } from './contexts/EditorContext';
+import { TicketsProvider } from './contexts/TicketsContext';
 import NavBar from './components/NavBar/NavBar';
 import SideBar from './components/SideBar/SideBar';
 import Footer from './components/Footer/Footer';
@@ -14,24 +15,26 @@ const App: React.FC = () => {
   return (
     <UserProvider>
       <SidebarProvider>
-        <EditorProvider>
-          <Router>
-            <div className="app">
-              <NavBar />
-              <div className="app-body">
-                <SideBar />
-                <main className="main-content">
-                  <Routes>
-                    <Route path="/" element={<TicketList />} />
-                    <Route path="/tickets" element={<TicketList />} />
-                    <Route path="/add-ticket" element={<AddTicket />} />
-                  </Routes>
-                </main>
+        <TicketsProvider>
+          <EditorProvider>
+            <Router>
+              <div className="app">
+                <NavBar />
+                <div className="app-body">
+                  <SideBar />
+                  <main className="main-content">
+                    <Routes>
+                      <Route path="/" element={<TicketList />} />
+                      <Route path="/tickets" element={<TicketList />} />
+                      <Route path="/add-ticket" element={<AddTicket />} />
+                    </Routes>
+                  </main>
+                </div>
+                <Footer />
               </div>
-              <Footer />
-            </div>
-          </Router>
-        </EditorProvider>
+            </Router>
+          </EditorProvider>
+        </TicketsProvider>
       </SidebarProvider>
     </UserProvider>
   );

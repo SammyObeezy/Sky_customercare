@@ -1,43 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import TableManager, { TableColumn } from '../../components/TableManager/TableManager';
+import { useTickets } from '../../contexts/TicketsContext';
 import './TicketList.css';
 
-// Mock data
-const mockTickets = [
-  {
-    id: 1,
-    ticketSubject: 'Addition of Guarantors to Loan Module',
-    ticketStatus: 'Open',
-    source: 'Email',
-    dateRequested: '2024-05-06 12:00:00'
-  },
-  {
-    id: 2,
-    ticketSubject: 'Reset Password',
-    ticketStatus: 'Resolved',
-    source: 'Email',
-    dateRequested: '2024-05-07 12:00:00'
-  },
-  {
-    id: 3,
-    ticketSubject: 'Portal Rights Requisition',
-    ticketStatus: 'Closed',
-    source: 'Email',
-    dateRequested: '2024-05-08 12:00:00'
-  },
-  {
-    id: 4,
-    ticketSubject: 'Addition of SHA Insurance',
-    ticketStatus: 'In Progress',
-    source: 'Help Desk System',
-    dateRequested: '2024-05-10 12:00:00'
-  }
-];
-
 const TicketList: React.FC = () => {
+  const { tickets, getTicketCounts } = useTickets();
   const [activeTab, setActiveTab] = useState('all-tickets');
   const [activeFilter, setActiveFilter] = useState('all');
+
+  const ticketCounts = getTicketCounts();
+
+  // Sort tickets by dateRequested (newest first) and then filter
+  const filteredTickets = useMemo(() => {
+  // First sort all tickets by ID (lowest first)
+  const sortedTickets = [...tickets].sort((a, b) => {
+    return a.id - b.id; // Ascending order (lowest ID first)
+  });
+
+  // Then apply filter
+  if (activeFilter === 'all') return sortedTickets;
+  
+  const filterMap: Record<string, string> = {
+    'open': 'Open',
+    'in-progress': 'In Progress',
+    'resolved': 'Resolved',
+    'closed': 'Closed',
+    'dropped': 'Dropped',
+    'on-hold': 'On Hold'
+  };
+  
+  return sortedTickets.filter(ticket => 
+    ticket.ticketStatus === filterMap[activeFilter]
+  );
+}, [tickets, activeFilter]);
 
   // Define table columns
   const columns: TableColumn[] = [
@@ -86,7 +82,13 @@ const TicketList: React.FC = () => {
       filterable: true,
       sortable: true,
       size: 160,
-      align: 'center'
+      align: 'center',
+      render: (row) => {
+        const date = new Date(row.dateRequested);
+        return (
+          <span>{date.toLocaleDateString()} {date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+        );
+      }
     }
   ];
 
@@ -114,16 +116,14 @@ const TicketList: React.FC = () => {
           <div className="ticket-content-layout">
             {/* Left Sidebar - Filters */}
             <div className="ticket-filter-sidebar">
-             
-
               <div className="filter-list">
                 <button
                   className={`filter-item ${activeFilter === 'all' ? 'active' : ''}`}
                   onClick={() => setActiveFilter('all')}
                 >
-                   <div className="status-dot status-all"></div>
+                  <div className="status-dot status-all"></div>
                   <span>All</span>
-                  <span className="count">0</span>
+                  <span className="count">{ticketCounts.all || 0}</span>
                 </button>
 
                 <button
@@ -132,7 +132,7 @@ const TicketList: React.FC = () => {
                 >
                   <div className="status-dot status-open"></div>
                   <span>Open</span>
-                  <span className="count">0</span>
+                  <span className="count">{ticketCounts.open || 0}</span>
                 </button>
 
                 <button
@@ -141,7 +141,7 @@ const TicketList: React.FC = () => {
                 >
                   <div className="status-dot status-in-progress"></div>
                   <span>In Progress</span>
-                  <span className="count">0</span>
+                  <span className="count">{ticketCounts['in-progress'] || 0}</span>
                 </button>
 
                 <button
@@ -150,7 +150,7 @@ const TicketList: React.FC = () => {
                 >
                   <div className="status-dot status-resolved"></div>
                   <span>Resolved</span>
-                  <span className="count">0</span>
+                  <span className="count">{ticketCounts.resolved || 0}</span>
                 </button>
 
                 <button
@@ -159,7 +159,7 @@ const TicketList: React.FC = () => {
                 >
                   <div className="status-dot status-closed"></div>
                   <span>Closed</span>
-                  <span className="count">0</span>
+                  <span className="count">{ticketCounts.closed || 0}</span>
                 </button>
 
                 <button
@@ -168,7 +168,7 @@ const TicketList: React.FC = () => {
                 >
                   <div className="status-dot status-dropped"></div>
                   <span>Dropped</span>
-                  <span className="count">0</span>
+                  <span className="count">{ticketCounts.dropped || 0}</span>
                 </button>
 
                 <button
@@ -177,16 +177,16 @@ const TicketList: React.FC = () => {
                 >
                   <div className="status-dot status-on-hold"></div>
                   <span>On Hold</span>
-                  <span className="count">0</span>
+                  <span className="count">{ticketCounts['on-hold'] || 0}</span>
                 </button>
               </div>
             </div>
 
-            {/* Right Side - Just the Table */}
+            {/* Right Side - Table */}
             <div className="ticket-table-section">
               <div className="ticket-table-container">
                 <TableManager
-                  data={mockTickets}
+                  data={filteredTickets}
                   columns={columns}
                   rowsPerPage={8}
                   emptyMessage="No tickets found."
