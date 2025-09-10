@@ -48,3 +48,352 @@
   justify-content: center;
   gap: 0.25rem;
 }
+/* Table controls styling */
+.table-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0 1rem;
+}
+
+.table-control-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #495057;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.table-control-btn:hover {
+  background-color: #f8f9fa;
+  border-color: #ced4da;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-control-btn svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+/* Ensure the table container has proper spacing */
+.ticket-table-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+/* Modal Overlay - Dark background that covers the whole screen */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Modal Content Box */
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  min-width: 500px;
+  max-width: 600px;
+  width: 90vw;
+  max-height: 80vh;
+  overflow: hidden;
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Modal Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background-color: #135764;
+  color: white;
+  border-bottom: none;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: white;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.modal-close:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+/* Modal Body */
+.modal-body {
+  padding: 1.5rem;
+  max-height: 400px;
+  overflow-y: auto;
+  background-color: #F7FCFD;
+}
+
+/* Modal Footer */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  background-color: #E3E3E3;
+  border-top: 1px solid #dee2e6;
+}
+
+/* Filter and Sort specific styling */
+.filter-modal .modal-content,
+.sort-modal .modal-content {
+  min-width: 550px;
+}
+
+/* Filter/Sort Row styling */
+.filter-row,
+.sort-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.filter-row:last-child,
+.sort-row:last-child {
+  border-bottom: none;
+}
+
+.filter-header,
+.sort-header {
+  font-weight: 600;
+  color: #135764;
+  background-color: white;
+  padding: 0.75rem 0;
+  border-bottom: 2px solid #135764;
+  margin-bottom: 1rem;
+}
+
+.filter-row select,
+.filter-row input,
+.sort-row select {
+  padding: 0.5rem;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  background-color: white;
+}
+
+.filter-row select:focus,
+.filter-row input:focus,
+.sort-row select:focus {
+  outline: none;
+  border-color: #135764;
+  box-shadow: 0 0 0 2px rgba(19, 87, 100, 0.25);
+}
+
+/* Delete buttons in filter/sort rows */
+.delete-filter-btn,
+.delete-sort-btn {
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  color: #F03E3E;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.delete-filter-btn:hover,
+.delete-sort-btn:hover {
+  background-color: rgba(240, 62, 62, 0.1);
+  color: #F03E3E;
+}
+
+/* Add Filter/Sort buttons */
+.add-filter-btn,
+.add-sort-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: #1098AD;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: white;
+  margin-top: 1rem;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.add-filter-btn:hover,
+.add-sort-btn:hover {
+  background-color: #0f8397;
+}
+
+/* Modal Footer Buttons */
+.secondary-btn {
+  padding: 0.75rem 1.5rem;
+  background-color: #E3E3E3;
+  color: #135764;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.secondary-btn:hover {
+  background-color: #d4d4d4;
+}
+
+.submit-btn {
+  padding: 0.75rem 1.5rem;
+  background-color: #144D5A;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.submit-btn:hover {
+  background-color: #0f3a44;
+}
+
+/* Badge styling */
+.badge {
+  background-color: #1098AD;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.badge-clear {
+  background: none;
+  border: none;
+  color: white;
+  margin-left: 0.25rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.badge-clear:hover {
+  color: #E3E3E3;
+}
+
+/* Pagination styling to match your theme */
+.table-footer {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: #F7FCFD;
+  border-top: 1px solid #dee2e6;
+}
+
+.pagination-btn {
+  padding: 0.5rem 0.75rem;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: #135764;
+  transition: all 0.2s;
+}
+
+.pagination-btn:hover {
+  background-color: #E3E3E3;
+}
+
+.pagination-btn.active {
+  background-color: #135764;
+  color: white;
+  border-color: #135764;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal-content {
+    min-width: 0;
+    width: 95vw;
+    margin: 1rem;
+  }
+  
+  .filter-modal .modal-content,
+  .sort-modal .modal-content {
+    min-width: 0;
+  }
+  
+  .filter-row,
+  .sort-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+}

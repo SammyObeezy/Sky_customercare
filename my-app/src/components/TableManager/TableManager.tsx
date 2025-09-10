@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, forwardRef, useImperativeHandle } from 'react';
 import "./TableManager.css";
 
 // Types
@@ -52,6 +52,9 @@ interface TableManagerProps {
   totalRecords?: number;
   onStateChange?: (state: TableState) => void;
   className?: string;
+  showExternalControls?: boolean;
+  onFilterClick?: () => void;
+  onSortClick?: () => void;
 }
 
 interface ModalProps {
@@ -228,7 +231,8 @@ const Badge: React.FC<{
 };
 
 // Main TableManager Component
-const TableManager: React.FC<TableManagerProps> = ({
+
+const TableManager = forwardRef<any, TableManagerProps>(({
   data = [],
   columns = [],
   actions = [],
@@ -239,12 +243,17 @@ const TableManager: React.FC<TableManagerProps> = ({
   totalRecords,
   onStateChange,
   className = ''
-}) => {
+}, ref) => {
+  useImperativeHandle(ref, () => ({
+    openFilterModal: () => setIsFilterModalOpen(true),
+    openSortModal: () => setIsSortModalOpen(true)
+  }));
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState<FilterRule[]>([]);
   const [sorters, setSorters] = useState<SortRule[]>([]);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [isSortModalOpen, setIsSortModalOpen] = useState(false);
+
 
   // Process data for client mode
   const processedData = useMemo(() => {
@@ -640,7 +649,7 @@ const TableManager: React.FC<TableManagerProps> = ({
       </Modal>
     </>
   );
-};
+});
 
 // Export component and types
 export default TableManager;
