@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSidebar } from '../../contexts/SidebarContext';
+import { useUser } from '../../contexts/UserContext';
 import {
   TicketsIcon,
   ReportsIcon,
@@ -13,9 +14,34 @@ import {
 } from '../Icons';
 import './SideBar.css';
 
+// OData SVG Icon
+const ODataIcon: React.FC = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2L2 7v10c0 5.55 3.84 9.739 9 11 5.16-1.261 9-5.45 9-11V7l-10-5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M12 8v8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M8 12h8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// Logout SVG Icon
+const LogoutIcon: React.FC = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <polyline points="16,17 21,12 16,7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <line x1="21" y1="12" x2="9" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
 const SideBar: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { isCollapsed, toggleSidebar } = useSidebar();
+  const { logout } = useUser();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <aside className={`sidebar ${isCollapsed ? 'collapsed' : 'expanded'}`}>
@@ -43,19 +69,38 @@ const SideBar: React.FC = () => {
           {!isCollapsed && <span className="nav-text">Reports</span>}
         </div>
 
-        <div className="nav-item" title="Users">
+        <div className="nav-item" title="Calendar">
           <OfficeIcon />
-          {!isCollapsed && <span className="nav-text">Calender</span>}
+          {!isCollapsed && <span className="nav-text">Calendar</span>}
         </div>
-        <div className="nav-item" title="Users">
+
+        <div className="nav-item" title="Tasks">
           <UsersIcon />
           {!isCollapsed && <span className="nav-text">Tasks</span>}
         </div>
+
+        <Link
+          to="/odata"
+          className={`nav-item ${location.pathname === '/odata' ? 'active' : ''}`}
+          title="OData"
+        >
+          <ODataIcon />
+          {!isCollapsed && <span className="nav-text">OData</span>}
+        </Link>
 
         <div className="nav-item" title="Settings">
           <SettingsIcon />
           {!isCollapsed && <span className="nav-text">Settings</span>}
         </div>
+
+        <button
+          className="nav-item logout-btn"
+          title="Logout"
+          onClick={handleLogout}
+        >
+          <LogoutIcon />
+          {!isCollapsed && <span className="nav-text">Logout</span>}
+        </button>
       </nav>
 
       <div className="sidebar-bottom">

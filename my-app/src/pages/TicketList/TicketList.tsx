@@ -8,10 +8,10 @@ const TicketList: React.FC = () => {
   const { tickets, getTicketCounts } = useTickets();
   const [activeTab, setActiveTab] = useState('all-tickets');
   const [activeFilter, setActiveFilter] = useState('all');
-  
 
-// Add this line here
-const tableManagerRef = useRef<any>(null);
+
+  // Add this line here
+  const tableManagerRef = useRef<any>(null);
 
   const ticketCounts = getTicketCounts();
 
@@ -216,13 +216,13 @@ const tableManagerRef = useRef<any>(null);
 
               <div className="ticket-table-container">
                 <TableManager
-  ref={tableManagerRef}
-  data={filteredTickets}
-  columns={columns}
-  rowsPerPage={8}
-  emptyMessage="No tickets found."
-  className="tickets-table-manager"
-/>
+                  ref={tableManagerRef}
+                  data={filteredTickets}
+                  columns={columns}
+                  rowsPerPage={8}
+                  emptyMessage="No tickets found."
+                  className="tickets-table-manager"
+                />
               </div>
             </div>
           </div>
