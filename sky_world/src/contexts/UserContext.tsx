@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, type ReactNode, useEffect } from 'react';
 
 // User interface
 interface User {
@@ -31,7 +31,7 @@ interface RegisterData {
 }
 
 // Updated context interface
-export interface UserContextType {
+interface UserContextType {
   // User state
   user: User | null;
   isAuthenticated: boolean;

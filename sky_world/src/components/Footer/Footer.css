@@ -1,0 +1,28 @@
+.footer {
+  grid-area: footer;
+  background-color: #E0E9EB; 
+  color: #1565c0; 
+  padding: 1rem;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem; 
+}
+
+.footer-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; 
+}
+
+.footer-item span {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #144D5A;
+}
+
+.footer-item svg {
+  flex-shrink: 0;
+}

@@ -1,0 +1,58 @@
+.odata-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+.page-header-section {
+  background: white;
+  padding: 1.5rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.page-header-content h1 {
+  margin: 0;
+  color: #135764;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.page-divider {
+  border: none;
+  height: 1px;
+  background-color: #dee2e6;
+  margin: 1rem 0 0 0;
+}
+
+.odata-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  padding: 2rem;
+}
+
+.empty-state {
+  text-align: center;
+  max-width: 400px;
+}
+
+.empty-state svg {
+  margin-bottom: 1rem;
+  opacity: 0.6;
+}
+
+.empty-state h3 {
+  color: #135764;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  color: #6c757d;
+  font-size: 1rem;
+  line-height: 1.5;
+}

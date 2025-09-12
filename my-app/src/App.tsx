@@ -93,4 +93,9 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default App;// In ./src/contexts/UserContext.ts
+export type UserContextType = {
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  // ... other properties from your user context
+};
