@@ -1,33 +1,137 @@
-import React from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
-import './styles.css'; // Updated CSS import path
+import TableManager, { type TableColumn, type TableState } from '../../../components/TableManager/TableManager';
+import TableControls from '../../../components/TableControls/TableControls';
+import './styles.css';
 
-// Added the standard route definition
+interface Person {
+  UserName: string;
+  FirstName: string;
+  LastName: string;
+  MiddleName: string | null;
+  Gender: string;
+  Age: number | null;
+}
+
 export const Route = createFileRoute('/_authenticated/odata/')({
-  component: OData,
+  component: ODataPage,
 });
 
-function OData() {
+function ODataPage() {
+  const [data, setData] = useState<Person[]>([]);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const tableManagerRef = useRef<any>(null);
+  const [tableStatus, setTableStatus] = useState({ filterCount: 0, sorterCount: 0 });
+
+  const apiBaseUrl = 'https://services.odata.org/v4/TripPinServiceRW/People';
+
+  const columns: TableColumn[] = [
+    { id: 'UserName', caption: 'User Name', filterable: true, sortable: true },
+    { id: 'FirstName', caption: 'First Name', filterable: true, sortable: true },
+    { id: 'LastName', caption: 'Last Name', filterable: true, sortable: true },
+    { id: 'Gender', caption: 'Gender', filterable: true, sortable: true, size: 100, align: 'center' },
+    { id: 'Age', caption: 'Age', sortable: true, size: 80, align: 'center', type: 'number' }
+  ];
+
+  const buildODataUrl = (state: TableState): string => {
+    const { page = 1, filters = [], sorters = [], rowsPerPage = 8 } = state;
+    const url = new URL(apiBaseUrl);
+
+    url.searchParams.append('$count', 'true');
+    url.searchParams.append('$top', rowsPerPage.toString());
+    url.searchParams.append('$skip', ((page - 1) * rowsPerPage).toString());
+
+    if (sorters.length > 0) {
+      const orderby = sorters.map(s => `${s.column} ${s.order}`).join(',');
+      url.searchParams.append('$orderby', orderby);
+    }
+
+    if (filters.length > 0) {
+      const columnTypes = columns.reduce((acc, col) => {
+        acc[col.id] = col.type || 'string';
+        return acc;
+      }, {} as Record<string, string>);
+
+      const filterClauses = filters.map(f => {
+        if (!f.column || !f.value) return '';
+
+        if (columnTypes[f.column] === 'number') {
+          if (isNaN(Number(f.value)) || f.relation !== 'equals') return '';
+          return `${f.column} eq ${f.value}`;
+        } else {
+          const val = `'${f.value.replace(/'/g, "''")}'`;
+          switch (f.relation) {
+            case 'equals': return `${f.column} eq ${val}`;
+            case 'contains': return `contains(${f.column}, ${val})`;
+            case 'startsWith': return `startswith(${f.column}, ${val})`;
+            default: return '';
+          }
+        }
+      }).filter(Boolean);
+
+      if (filterClauses.length > 0) {
+        url.searchParams.append('$filter', filterClauses.join(' and '));
+      }
+    }
+    return url.toString();
+  };
+
+  const fetchData = useCallback(async (state: TableState) => {
+    setIsLoading(true);
+    setError(null);
+    const url = buildODataUrl(state);
+    console.log("Fetching OData URL:", url);
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+      }
+      const result = await response.json();
+      setData(result.value);
+      setTotalRecords(result['@odata.count']);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch data');
+      setData([]);
+      setTotalRecords(0);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   return (
     <div className="odata-page">
       <div className="page-header-section">
         <div className="page-header-content">
-          <h1>OData</h1>
+          <h1>OData - TripPin Service</h1>
         </div>
-        <hr className="page-divider" />
       </div>
-      
       <div className="odata-container">
-        <div className="empty-state">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2L2 7v10c0 5.55 3.84 9.739 9 11 5.16-1.261 9-5.45 9-11V7l-10-5z" stroke="#135764" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M12 8v8" stroke="#135764" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M8 12h8" stroke="#135764" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          <h3>OData Integration</h3>
-          <p>This feature will be implemented soon.</p>
-        </div>
+        {isLoading && (
+          <div className="loading-overlay">
+            <div className="loading-spinner">
+              <div className="spinner"></div>
+            </div>
+          </div>
+        )}
+        {error && <div className="error-message">Error: {error}</div>}
+        
+        <TableControls tableManagerRef={tableManagerRef} status={tableStatus} />
+
+        <TableManager
+          ref={tableManagerRef}
+          data={data}
+          columns={columns}
+          rowsPerPage={8}
+          emptyMessage="No data found."
+          dataMode="server"
+          totalRecords={totalRecords}
+          onStateChange={fetchData}
+          onStatusChange={setTableStatus}
+        />
       </div>
     </div>
   );
-};
+}

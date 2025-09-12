@@ -296,3 +296,23 @@ export const SelectDropdownIcon: React.FC<IconProps> = ({ width = 8, height = 12
     <path d="M1.66663 4.24999L3.99996 1.91666L6.33329 4.24999M6.33329 7.74999L3.99996 10.0833L1.66663 7.74999" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
+// Add this to src/components/Icons.tsx
+
+export const CancelIcon: React.FC<IconProps> = ({ width = 16, height = 16, className, color = "currentColor" }) => (
+  <svg width={width} height={height} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z" fill={color}/>
+  </svg>
+);
+// Add these to src/components/Icons.tsx
+
+export const FilterIcon: React.FC<IconProps> = ({ width = 20, height = 20, className, color = "currentColor" }) => (
+  <svg width={width} height={height} viewBox="0 0 19 13" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path d="M3.61743 7.0542H15.6174V5.0542H3.61743M0.617432 0.0541992V2.0542H18.6174V0.0541992M7.61743 12.0542H11.6174V10.0542H7.61743V12.0542Z" fill={color} />
+  </svg>
+);
+
+export const SortIcon: React.FC<IconProps> = ({ width = 20, height = 20, className, color = "currentColor" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 640 640" fill={color} className={className}>
+    <path d="M278.6 438.6L182.6 534.6C170.1 547.1 149.8 547.1 137.3 534.6L41.3 438.6C28.8 426.1 28.8 405.8 41.3 393.3C53.8 380.8 74.1 380.8 86.6 393.3L128 434.7V128c0-17.7 14.3-32 32-32s32 14.3 32 32v306.7L233.4 393.3c12.5-12.5 32.8-12.5 45.3 0s12.5 32.8 0 45.3zM352 96h32c17.7 0 32 14.3 32 32s-14.3 32-32 32h-32c-17.7 0-32-14.3-32-32s14.3-32 32-32zm0 128h96c17.7 0 32 14.3 32 32s-14.3 32-32 32h-96c-17.7 0-32-14.3-32-32s14.3-32 32-32zm0 128h160c17.7 0 32 14.3 32 32s-14.3 32-32 32H352c-17.7 0-32-14.3-32-32s14.3-32 32-32zm0 128h224c17.7 0 32 14.3 32 32s-14.3 32-32 32H352c-17.7 0-32-14.3-32-32s14.3-32 32-32z" />
+  </svg>
+);

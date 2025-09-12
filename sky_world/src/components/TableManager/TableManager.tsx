@@ -55,6 +55,7 @@ interface TableManagerProps {
   showExternalControls?: boolean;
   onFilterClick?: () => void;
   onSortClick?: () => void;
+  onStatusChange?: (status: { filterCount: number; sorterCount: number }) => void;
 }
 
 interface ModalProps {
@@ -242,18 +243,31 @@ const TableManager = forwardRef<any, TableManagerProps>(({
   dataMode = 'client',
   totalRecords,
   onStateChange,
-  className = ''
+  className = '',
+  onStatusChange
 }, ref) => {
   useImperativeHandle(ref, () => ({
     openFilterModal: () => setIsFilterModalOpen(true),
-    openSortModal: () => setIsSortModalOpen(true)
+    openSortModal: () => setIsSortModalOpen(true),
+    reset: () => {
+      setFilters([]);
+      setSorters([]);
+    },
+    resetFilters: () => setFilters([]), 
+    resetSorters: () => setSorters([]),
   }));
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState<FilterRule[]>([]);
   const [sorters, setSorters] = useState<SortRule[]>([]);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [isSortModalOpen, setIsSortModalOpen] = useState(false);
-
+ 
+  useEffect(() => {
+    onStatusChange?.({
+      filterCount: filters.length,
+      sorterCount: sorters.length,
+    });
+  }, [filters, sorters, onStatusChange]);
 
   // Process data for client mode
   const processedData = useMemo(() => {

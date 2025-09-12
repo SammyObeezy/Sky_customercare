@@ -7,18 +7,21 @@ import Footer from '../components/Footer/Footer';
 
 const AuthenticatedLayout = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useUser();
+  const { isAuthenticated, isLoading } = useUser();
 
   React.useEffect(() => {
-    if (!isAuthenticated) {
+    // **Only redirect if loading is finished AND the user is not authenticated**
+    if (!isLoading && !isAuthenticated) {
       navigate({ to: '/auth/login', replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isLoading, isAuthenticated, navigate]);
 
-  if (!isAuthenticated) {
+  // **While the auth check is running, don't render anything**
+  if (isLoading) {
     return null;
   }
 
+  // If loading is done, render the layout
   return (
     <div className="app">
       <NavBar />
@@ -33,7 +36,6 @@ const AuthenticatedLayout = () => {
   );
 };
 
-// FIXED: Removed the path string argument
 export const Route = createFileRoute('/_authenticated')({
   component: AuthenticatedLayout,
 });

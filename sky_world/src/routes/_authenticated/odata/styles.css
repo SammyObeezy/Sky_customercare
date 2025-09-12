@@ -1,58 +1,46 @@
 .odata-page {
-  height: 100%;
   display: flex;
   flex-direction: column;
-  margin: 0;
-  padding: 0;
+  height: 100%;
 }
 
 .page-header-section {
-  background: white;
-  padding: 1.5rem;
-  border-bottom: 1px solid #dee2e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
 }
 
-.page-header-content h1 {
-  margin: 0;
-  color: #135764;
-  font-size: 2rem;
-  font-weight: 600;
-}
-
-.page-divider {
-  border: none;
-  height: 1px;
-  background-color: #dee2e6;
-  margin: 1rem 0 0 0;
+.odata-controls {
+  display: flex;
+  gap: 1rem;
 }
 
 .odata-container {
   flex: 1;
+  position: relative;
+  padding: 20px;
+  border-top: 1px solid #dee2e6;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.7);
   display: flex;
-  align-items: center;
   justify-content: center;
-  background-color: #f8f9fa;
-  padding: 2rem;
+  align-items: center;
+  z-index: 10;
 }
 
-.empty-state {
+.error-message {
+  color: #c92a2a;
+  padding: 1rem;
+  background-color: #fff5f5;
+  border: 1px solid #ff8787;
+  border-radius: 4px;
   text-align: center;
-  max-width: 400px;
-}
-
-.empty-state svg {
-  margin-bottom: 1rem;
-  opacity: 0.6;
-}
-
-.empty-state h3 {
-  color: #135764;
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.empty-state p {
-  color: #6c757d;
-  font-size: 1rem;
-  line-height: 1.5;
 }

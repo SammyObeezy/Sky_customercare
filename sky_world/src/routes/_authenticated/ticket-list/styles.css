@@ -252,3 +252,40 @@
     font-size: 0.9rem;
   }
 }
+/* Add this to your ticket-list/styles.css */
+
+.table-controls .table-control-btn {
+  /* Hide the old buttons, as they are replaced by badges when active */
+  display: inline-flex;
+}
+
+.control-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: #A10900; /* Dark red */
+  color: white;
+  border-radius: 4px;
+  overflow: hidden;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.control-badge span {
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.clear-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #740200; /* Darker red */
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.clear-badge:hover {
+  background-color: #4f0100; /* Even darker red */
+}

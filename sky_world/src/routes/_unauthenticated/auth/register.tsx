@@ -1,19 +1,14 @@
 // src/routes/_unauthenticated/auth/register.tsx
 
 import React, { useState } from 'react';
-// 1. Updated imports for TanStack Router
 import { Link, createFileRoute } from '@tanstack/react-router';
 import { useUser } from '../../../contexts/UserContext';
-import './styles.css'; // Path to the CSS file we moved
+import './styles.css';
 
-// 2. Added route definition
-// export const Route = createFileRoute('/_unauthenticated/auth/register')({
-//   component: Register,
-// })
+// FIXED: Removed the incorrect path argument
 export const Route = createFileRoute('/_unauthenticated/auth/register')({
   component: Register,
 });
-
 
 interface RegisterFormData {
   firstName: string;
@@ -46,7 +41,6 @@ function Register() {
       [name]: value
     }));
     
-    // Clear errors when user starts typing
     if (errors[name as keyof RegisterFormData]) {
       setErrors(prev => ({
         ...prev,
@@ -57,25 +51,22 @@ function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Registration form submitted with:', formData);
-    
     setIsLoading(true);
-    setErrors({});
-    
+    setErrors({}); // Clear previous errors
+
     try {
       const result = await register(formData);
-      console.log('Registration result:', result);
       
       if (result.success) {
-        console.log('Registration successful, should redirect now');
-        // The redirect will happen automatically via the _unauthenticated.tsx layout route
-      } else {
-        console.log('Registration failed:', result.message);
-        setErrors({ email: result.message });
+        // Redirect is handled automatically
+        console.log('Registration successful');
+      } else if (result.errors) {
+        // FIXED: Set the new errors object to display per-field validation
+        setErrors(result.errors);
       }
     } catch (error) {
       console.log('Registration error:', error);
-      setErrors({ email: 'An error occurred during registration' });
+      setErrors({ email: 'An unknown error occurred' });
     } finally {
       setIsLoading(false);
     }
@@ -83,7 +74,6 @@ function Register() {
 
   return (
     <div className="auth-container">
-      {/* Left side - Image/Branding */}
       <div className="auth-image-section">
         <div className="auth-brand">
           <h1>Join Our Team</h1>
@@ -91,7 +81,6 @@ function Register() {
         </div>
       </div>
 
-      {/* Right side - Register Form */}
       <div className="auth-form-section">
         <div className="auth-form-container">
           <div className="auth-header">
@@ -201,7 +190,6 @@ function Register() {
             </button>
 
             <div className="auth-footer">
-              {/* 3. Updated link path */}
               <p>Already have an account? <Link to="/auth/login">Sign in</Link></p>
             </div>
           </form>

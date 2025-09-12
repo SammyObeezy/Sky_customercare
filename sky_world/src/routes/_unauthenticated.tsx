@@ -4,22 +4,23 @@ import { useUser } from '../contexts/UserContext';
 
 const UnauthenticatedLayout = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useUser();
+  const { isAuthenticated, isLoading } = useUser();
 
   React.useEffect(() => {
-    if (isAuthenticated) {
+    // **Only redirect if loading is finished AND the user IS authenticated**
+    if (!isLoading && isAuthenticated) {
       navigate({ to: '/', replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isLoading, isAuthenticated, navigate]);
 
-  if (isAuthenticated) {
+  // **While the auth check is running, don't render anything**
+  if (isLoading) {
     return null;
   }
-
+  
   return <Outlet />;
 };
 
-// FIXED: Removed the path string argument
 export const Route = createFileRoute('/_unauthenticated')({
   component: UnauthenticatedLayout,
 });

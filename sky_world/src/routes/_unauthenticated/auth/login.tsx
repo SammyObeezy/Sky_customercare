@@ -1,20 +1,14 @@
 // src/routes/_unauthenticated/auth/login.tsx
 
 import React, { useState } from 'react';
-// 1. Updated imports for TanStack Router
 import { Link, createFileRoute } from '@tanstack/react-router';
 import { useUser } from '../../../contexts/UserContext';
-import './styles.css'; // Path to the CSS file we moved
+import './styles.css';
 
-// 2. Added route definition
-// export const Route = createFileRoute('/_unauthenticated/auth/login')({
-//   component: Login,
-// })
-
+// FIXED: Removed the incorrect path argument
 export const Route = createFileRoute('/_unauthenticated/auth/login')({
   component: Login,
 });
-
 
 interface LoginFormData {
   email: string;
@@ -41,7 +35,6 @@ function Login() {
       [name]: type === 'checkbox' ? checked : value
     }));
     
-    // Clear errors when user starts typing
     if (errors[name as keyof LoginFormData]) {
       setErrors(prev => ({
         ...prev,
@@ -52,25 +45,22 @@ function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login form submitted with:', formData);
-    
     setIsLoading(true);
-    setErrors({});
+    setErrors({}); // Clear previous errors
     
     try {
       const result = await login(formData);
-      console.log('Login result:', result);
       
       if (result.success) {
-        console.log('Login successful, should redirect now');
-        // The redirect will happen automatically via the _unauthenticated.tsx layout route
-      } else {
-        console.log('Login failed:', result.message);
-        setErrors({ email: result.message });
+        // Redirect is handled automatically by the layout route
+        console.log('Login successful');
+      } else if (result.errors) {
+        // FIXED: Set the new errors object to display per-field validation
+        setErrors(result.errors);
       }
     } catch (error) {
       console.log('Login error:', error);
-      setErrors({ email: 'An error occurred during login' });
+      setErrors({ email: 'An unknown error occurred' });
     } finally {
       setIsLoading(false);
     }
@@ -78,7 +68,6 @@ function Login() {
 
   return (
     <div className="auth-container">
-      {/* Left side - Image/Branding */}
       <div className="auth-image-section">
         <div className="auth-brand">
           <h1>Help Desk</h1>
@@ -86,7 +75,6 @@ function Login() {
         </div>
       </div>
 
-      {/* Right side - Login Form */}
       <div className="auth-form-section">
         <div className="auth-form-container">
           <div className="auth-header">
@@ -137,7 +125,6 @@ function Login() {
                 <span className="checkmark"></span>
                 Remember me
               </label>
-              {/* 3. Updated link path */}
               <Link to="/auth/forgot-password" className="forgot-link">
                 Forgot Password?
               </Link>
@@ -152,7 +139,6 @@ function Login() {
             </button>
 
             <div className="auth-footer">
-              {/* 3. Updated link path */}
               <p>Don't have an account? <Link to="/auth/register">Sign up</Link></p>
             </div>
           </form>
