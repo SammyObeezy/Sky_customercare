@@ -17,7 +17,7 @@ interface LoginFormData {
 }
 
 function Login() {
-  const { login } = useUser();
+  const { login, validateFieldRealTime, fieldStates } = useUser();
   
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
@@ -35,6 +35,11 @@ function Login() {
       [name]: type === 'checkbox' ? checked : value
     }));
     
+    // Real-time validation for non-checkbox fields
+    if (name !== 'rememberMe') {
+      validateFieldRealTime(name, value, name === 'email' ? 'email' : 'password');
+    }
+
     if (errors[name as keyof LoginFormData]) {
       setErrors(prev => ({
         ...prev,
@@ -92,10 +97,11 @@ function Login() {
                 value={formData.email}
                 onChange={handleInputChange}
                 placeholder="Enter your email"
-                className={errors.email ? 'error' : ''}
+                className={errors.email ? 'error' : fieldStates.email?.status || ''}
                 disabled={isLoading}
               />
               {errors.email && <span className="error-message">{errors.email}</span>}
+              {fieldStates.email?.status === 'valid' && <span className="success-message">{fieldStates.email.message}</span>}
             </div>
 
             <div className="form-group">
@@ -107,10 +113,11 @@ function Login() {
                 value={formData.password}
                 onChange={handleInputChange}
                 placeholder="Enter your password"
-                className={errors.password ? 'error' : ''}
+                className={errors.password ? 'error' : fieldStates.password?.status || ''}
                 disabled={isLoading}
               />
               {errors.password && <span className="error-message">{errors.password}</span>}
+              {fieldStates.password?.status === 'valid' && <span className="success-message">{fieldStates.password.message}</span>}
             </div>
 
             <div className="form-options">

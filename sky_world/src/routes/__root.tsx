@@ -1,4 +1,3 @@
-// src/routes/__root.tsx
 import React from 'react';
 // 1. Import Link for the notFoundComponent
 import { createRootRoute, Outlet, Link } from '@tanstack/react-router';

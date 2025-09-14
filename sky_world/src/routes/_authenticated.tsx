@@ -10,18 +10,15 @@ const AuthenticatedLayout = () => {
   const { isAuthenticated, isLoading } = useUser();
 
   React.useEffect(() => {
-    // **Only redirect if loading is finished AND the user is not authenticated**
     if (!isLoading && !isAuthenticated) {
       navigate({ to: '/auth/login', replace: true });
     }
   }, [isLoading, isAuthenticated, navigate]);
 
-  // **While the auth check is running, don't render anything**
   if (isLoading) {
     return null;
   }
-
-  // If loading is done, render the layout
+  
   return (
     <div className="app">
       <NavBar />

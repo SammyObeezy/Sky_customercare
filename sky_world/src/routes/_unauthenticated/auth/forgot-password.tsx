@@ -1,5 +1,4 @@
 // src/routes/_unauthenticated/auth/forgot-password.tsx
-
 import React, { useState } from 'react';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import { useUser } from '../../../contexts/UserContext';
@@ -11,7 +10,7 @@ export const Route = createFileRoute('/_unauthenticated/auth/forgot-password')({
 });
 
 function ForgotPassword() {
-  const { forgotPassword } = useUser(); // Get the function from the context
+  const { forgotPassword, validateFieldRealTime, fieldStates } = useUser();
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,10 +20,9 @@ function ForgotPassword() {
     e.preventDefault();
     setIsLoading(true);
     setError(null); // Clear previous errors
-
+    
     // Call the actual function from the context
     const result = await forgotPassword(email);
-
     if (result.success) {
       setIsSubmitted(true);
     } else {
@@ -42,7 +40,7 @@ function ForgotPassword() {
           <p>We'll help you get back to your account</p>
         </div>
       </div>
-
+      
       <div className="auth-form-section">
         <div className="auth-form-container">
           {!isSubmitted ? (
@@ -51,7 +49,7 @@ function ForgotPassword() {
                 <h2>Forgot Password?</h2>
                 <p>Enter your email address and we'll send you instructions to reset your password</p>
               </div>
-
+              
               <form className="auth-form" onSubmit={handleSubmit}>
                 <div className="form-group">
                   <label htmlFor="email">Email Address</label>
@@ -59,22 +57,26 @@ function ForgotPassword() {
                     type="email"
                     id="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      validateFieldRealTime('forgotEmail', e.target.value, 'email' as string);
+                    }}
                     placeholder="Enter your email"
-                    className={error ? 'error' : ''} // Apply error class
+                    className={error ? 'error' : fieldStates.forgotEmail?.status || ''}
                     required
                   />
                   {error && <span className="error-message">{error}</span>}
+                  {fieldStates.forgotEmail?.status === 'valid' && <span className="success-message">{fieldStates.forgotEmail.message}</span>}
                 </div>
-
-                <button 
-                  type="submit" 
+                
+                <button
+                  type="submit"
                   className="auth-btn primary"
                   disabled={isLoading}
                 >
                   {isLoading ? 'Sending...' : 'Send Reset Instructions'}
                 </button>
-
+                
                 <div className="auth-footer">
                   <p>Remember your password? <Link to="/auth/login">Sign in</Link></p>
                 </div>

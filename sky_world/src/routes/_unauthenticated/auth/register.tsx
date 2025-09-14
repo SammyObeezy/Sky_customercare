@@ -20,8 +20,8 @@ interface RegisterFormData {
 }
 
 function Register() {
-  const { register } = useUser();
-  
+  const { register, validateFieldRealTime, fieldStates, getPasswordStrength } = useUser();
+
   const [formData, setFormData] = useState<RegisterFormData>({
     firstName: '',
     lastName: '',
@@ -30,7 +30,7 @@ function Register() {
     password: '',
     confirmPassword: ''
   });
-  
+
   const [errors, setErrors] = useState<Partial<RegisterFormData>>({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -40,7 +40,16 @@ function Register() {
       ...prev,
       [name]: value
     }));
-    
+
+    // Real-time validation with proper TypeScript typing
+    let validationType = 'name';
+    if (name === 'email') validationType = 'email';
+    else if (name === 'phoneNumber') validationType = 'phone';
+    else if (name === 'password') validationType = 'password';
+    else if (name === 'confirmPassword') validationType = 'confirmPassword';
+
+    validateFieldRealTime(name, value, validationType as string);
+
     if (errors[name as keyof RegisterFormData]) {
       setErrors(prev => ({
         ...prev,
@@ -56,7 +65,7 @@ function Register() {
 
     try {
       const result = await register(formData);
-      
+
       if (result.success) {
         // Redirect is handled automatically
         console.log('Registration successful');
@@ -99,10 +108,11 @@ function Register() {
                   value={formData.firstName}
                   onChange={handleInputChange}
                   placeholder="First name"
-                  className={errors.firstName ? 'error' : ''}
+                  className={errors.firstName ? 'error' : fieldStates.firstName?.status || ''}
                   disabled={isLoading}
                 />
                 {errors.firstName && <span className="error-message">{errors.firstName}</span>}
+                {fieldStates.firstName?.status === 'valid' && <span className="success-message">{fieldStates.firstName.message}</span>}
               </div>
 
               <div className="form-group">
@@ -114,10 +124,11 @@ function Register() {
                   value={formData.lastName}
                   onChange={handleInputChange}
                   placeholder="Last name"
-                  className={errors.lastName ? 'error' : ''}
+                  className={errors.lastName ? 'error' : fieldStates.lastName?.status || ''}
                   disabled={isLoading}
                 />
                 {errors.lastName && <span className="error-message">{errors.lastName}</span>}
+                {fieldStates.lastName?.status === 'valid' && <span className="success-message">{fieldStates.lastName.message}</span>}
               </div>
             </div>
 
@@ -130,10 +141,11 @@ function Register() {
                 value={formData.email}
                 onChange={handleInputChange}
                 placeholder="Enter your email"
-                className={errors.email ? 'error' : ''}
+                className={errors.email ? 'error' : fieldStates.email?.status || ''}
                 disabled={isLoading}
               />
               {errors.email && <span className="error-message">{errors.email}</span>}
+              {fieldStates.email?.status === 'valid' && <span className="success-message">{fieldStates.email.message}</span>}
             </div>
 
             <div className="form-group">
@@ -145,10 +157,11 @@ function Register() {
                 value={formData.phoneNumber}
                 onChange={handleInputChange}
                 placeholder="+254712345678"
-                className={errors.phoneNumber ? 'error' : ''}
+                className={errors.phoneNumber ? 'error' : fieldStates.phoneNumber?.status || ''}
                 disabled={isLoading}
               />
               {errors.phoneNumber && <span className="error-message">{errors.phoneNumber}</span>}
+              {fieldStates.phoneNumber?.status === 'valid' && <span className="success-message">{fieldStates.phoneNumber.message}</span>}
             </div>
 
             <div className="form-group">
@@ -160,10 +173,23 @@ function Register() {
                 value={formData.password}
                 onChange={handleInputChange}
                 placeholder="Create a strong password"
-                className={errors.password ? 'error' : ''}
+                className={errors.password ? 'error' : fieldStates.password?.status || ''}
                 disabled={isLoading}
               />
               {errors.password && <span className="error-message">{errors.password}</span>}
+              {fieldStates.password?.status === 'valid' && <span className="success-message">{fieldStates.password.message}</span>}
+              
+              {/* Password Strength Indicator - MOVED TO CORRECT LOCATION */}
+              {formData.password && (
+                <div className="password-strength">
+                  <div className="strength-bar">
+                    <div className={`strength-fill ${getPasswordStrength(formData.password).level}`}></div>
+                  </div>
+                  <div className={`strength-text ${getPasswordStrength(formData.password).level}`}>
+                    Password strength: {getPasswordStrength(formData.password).level}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="form-group">
@@ -175,14 +201,15 @@ function Register() {
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 placeholder="Confirm your password"
-                className={errors.confirmPassword ? 'error' : ''}
+                className={errors.confirmPassword ? 'error' : fieldStates.confirmPassword?.status || ''}
                 disabled={isLoading}
               />
               {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
+              {fieldStates.confirmPassword?.status === 'valid' && <span className="success-message">{fieldStates.confirmPassword.message}</span>}
             </div>
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="auth-btn primary"
               disabled={isLoading}
             >
