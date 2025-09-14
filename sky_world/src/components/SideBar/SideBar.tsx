@@ -12,7 +12,6 @@ import {
   OfficeIcon,
   CollapseIcon,
   ExpandIcon,
-  LayoutIcon
 } from '../Icons'; // Corrected the relative path for icons
 import './SideBar.css';
 
