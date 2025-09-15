@@ -1,71 +1,25 @@
-import React, { useState, useEffect, useMemo, useCallback, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useMemo, useCallback, forwardRef, useImperativeHandle } from 'react';
 import "./TableManager.css";
 
-// Types
-interface TableColumn {
-  id: string;
-  caption: string;
-  filterable?: boolean;
-  sortable?: boolean;
-  size?: number;
-  align?: 'left' | 'center' | 'right';
-  type?: 'string' | 'number' | 'date';
-  hide?: boolean;
-  render?: (row: any) => React.ReactNode;
-}
-
-interface TableAction {
-  id: string;
-  icon: string;
-  title: string;
-  handler?: (rowId: string) => void;
-  href?: (row: any) => string;
-  type?: 'button' | 'link';
-}
-
-interface FilterRule {
-  column: string;
-  relation: 'equals' | 'contains' | 'startsWith';
-  value: string;
-}
-
-interface SortRule {
-  column: string;
-  order: 'asc' | 'desc';
-}
-
-interface TableState {
-  page: number;
-  filters: FilterRule[];
-  sorters: SortRule[];
-  rowsPerPage: number;
-}
-
-interface TableManagerProps {
+export interface TableColumn { id: string; caption: string; filterable?: boolean; sortable?: boolean; size?: number; align?: 'left' | 'center' | 'right'; type?: 'string' | 'number' | 'date'; hide?: boolean; render?: (row: any) => React.ReactNode; }
+export interface TableAction { id: string; icon: string; title: string; handler?: (rowId: string) => void; href?: (row: any) => string; type?: 'button' | 'link'; }
+export interface FilterRule { column: string; relation: 'equals' | 'contains' | 'startsWith'; value: string; }
+export interface SortRule { column: string; order: 'asc' | 'desc'; }
+export interface TableState { page: number; filters: FilterRule[]; sorters: SortRule[]; }
+export interface TableManagerProps {
   data: any[];
   columns: TableColumn[];
   actions?: TableAction[];
   rowsPerPage?: number;
-  maxPageButtons?: number;
   emptyMessage?: string;
-  dataMode?: 'client' | 'server';
-  totalRecords?: number;
-  onStateChange?: (state: TableState) => void;
   className?: string;
-  showExternalControls?: boolean;
-  onFilterClick?: () => void;
-  onSortClick?: () => void;
-  onStatusChange?: (status: { filterCount: number; sorterCount: number }) => void;
+  filters: FilterRule[];
+  sorters: SortRule[];
+  currentPage: number;
+  totalRecords: number;
+  onStateChange: (newState: Partial<TableState>) => void;
 }
-
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: React.ReactNode;
-  children: React.ReactNode;
-  footer: React.ReactNode;
-  className?: string;
-}
+interface ModalProps { isOpen: boolean; onClose: () => void; title: React.ReactNode; children: React.ReactNode; footer: React.ReactNode; className?: string; }
 
 // SVG Icons
 const SVGIcons = {
@@ -208,273 +162,73 @@ const SortRow: React.FC<{
   );
 };
 
-// Badge Component
-const Badge: React.FC<{
-  count: number;
-  onClear: () => void;
-}> = ({ count, onClear }) => {
-  if (count === 0) return null;
-
-  return (
-    <span className="badge active">
-      {count}
-      <button
-        className="badge-clear"
-        onClick={(e) => {
-          e.stopPropagation();
-          onClear();
-        }}
-      >
-        &times;
-      </button>
-    </span>
-  );
-};
-
-// Main TableManager Component
-
 const TableManager = forwardRef<any, TableManagerProps>(({
   data = [],
   columns = [],
   actions = [],
   rowsPerPage = 8,
-  maxPageButtons = 5,
   emptyMessage = "No data available.",
-  dataMode = 'client',
+  className = '',
+  filters,
+  sorters,
+  currentPage,
   totalRecords,
   onStateChange,
-  className = '',
-  onStatusChange
 }, ref) => {
-  useImperativeHandle(ref, () => ({
-    openFilterModal: () => setIsFilterModalOpen(true),
-    openSortModal: () => setIsSortModalOpen(true),
-    reset: () => {
-      setFilters([]);
-      setSorters([]);
-    },
-    resetFilters: () => setFilters([]), 
-    resetSorters: () => setSorters([]),
-  }));
-  const [currentPage, setCurrentPage] = useState(1);
-  const [filters, setFilters] = useState<FilterRule[]>([]);
-  const [sorters, setSorters] = useState<SortRule[]>([]);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [isSortModalOpen, setIsSortModalOpen] = useState(false);
- 
-  useEffect(() => {
-    onStatusChange?.({
-      filterCount: filters.length,
-      sorterCount: sorters.length,
-    });
-  }, [filters, sorters, onStatusChange]);
-
-  // Process data for client mode
-  const processedData = useMemo(() => {
-    if (dataMode === 'server') return data;
-
-    let processed = [...data];
-
-    // Apply filters
-    if (filters.length > 0) {
-      processed = processed.filter(item =>
-        filters.every(filter => {
-          const itemValue = (item[filter.column] || '').toString().toLowerCase();
-          const filterValue = filter.value.toLowerCase();
-          switch (filter.relation) {
-            case 'equals': return itemValue === filterValue;
-            case 'contains': return itemValue.includes(filterValue);
-            case 'startsWith': return itemValue.startsWith(filterValue);
-            default: return true;
-          }
-        })
-      );
-    }
-
-    // Apply sorting
-    if (sorters.length > 0) {
-      processed.sort((a, b) => {
-        for (const sorter of sorters) {
-          const valA = a[sorter.column];
-          const valB = b[sorter.column];
-          let comparison = 0;
-          if (valA > valB) comparison = 1;
-          else if (valA < valB) comparison = -1;
-          if (comparison !== 0) {
-            return sorter.order === 'asc' ? comparison : -comparison;
-          }
-        }
-        return 0;
-      });
-    }
-
-    return processed;
-  }, [data, filters, sorters, dataMode]);
-
-  // Calculate pagination
-  const { dataToRender, totalPages, recordCount } = useMemo(() => {
-    const count = dataMode === 'server' ? (totalRecords || 0) : processedData.length;
-    const pages = Math.ceil(count / rowsPerPage);
-    const validPage = Math.max(1, Math.min(currentPage, pages || 1));
-
-    if (dataMode === 'server') {
-      return {
-        dataToRender: data,
-        totalPages: pages,
-        recordCount: count
-      };
-    }
-
-    const startIndex = (validPage - 1) * rowsPerPage;
-    const endIndex = startIndex + rowsPerPage;
-
-    return {
-      dataToRender: processedData.slice(startIndex, endIndex),
-      totalPages: pages,
-      recordCount: count
-    };
-  }, [processedData, currentPage, rowsPerPage, dataMode, totalRecords, data]);
-
-  // State change handler
-  const requestStateUpdate = useCallback(() => {
-    if (dataMode === 'server' && onStateChange) {
-      onStateChange({
-        page: currentPage,
-        filters,
-        sorters,
-        rowsPerPage
-      });
-    }
-  }, [currentPage, filters, sorters, rowsPerPage, dataMode, onStateChange]);
-
-  // Update handlers
-  const updateFilters = useCallback((newFilters: FilterRule[]) => {
-    setFilters(newFilters);
-    setCurrentPage(1);
-  }, []);
-
-  const updateSorters = useCallback((newSorters: SortRule[]) => {
-    setSorters(newSorters);
-    setCurrentPage(1);
-  }, []);
-
-  // Effect for server mode state changes
-  useEffect(() => {
-    if (dataMode === 'server') {
-      requestStateUpdate();
-    }
-  }, [requestStateUpdate, dataMode]);
-
-  // Page change handler
-  const handlePageChange = useCallback((page: number) => {
-    setCurrentPage(page);
-    if (dataMode === 'server') {
-      requestStateUpdate();
-    }
-  }, [dataMode, requestStateUpdate]);
-
-  // Pagination buttons
-  const paginationButtons = useMemo(() => {
-    if (totalPages <= 1) return null;
-
-    const buttons = [];
-    let startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
-    let endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
-
-    if (endPage - startPage + 1 < maxPageButtons) {
-      startPage = Math.max(1, endPage - maxPageButtons + 1);
-    }
-
-    // First and Previous
-    buttons.push(
-      <button
-        key="first"
-        className="pagination-btn"
-        disabled={currentPage === 1}
-        onClick={() => handlePageChange(1)}
-      >
-        First
-      </button>,
-      <button
-        key="prev"
-        className="pagination-btn"
-        disabled={currentPage === 1}
-        onClick={() => handlePageChange(currentPage - 1)}
-      >
-        Previous
-      </button>
-    );
-
-    // Page numbers
-    for (let i = startPage; i <= endPage; i++) {
-      buttons.push(
-        <button
-          key={i}
-          className={`pagination-btn ${i === currentPage ? 'active' : ''}`}
-          onClick={() => handlePageChange(i)}
-        >
-          {i}
-        </button>
-      );
-    }
-
-    // Next and Last
-    buttons.push(
-      <button
-        key="next"
-        className="pagination-btn"
-        disabled={currentPage === totalPages}
-        onClick={() => handlePageChange(currentPage + 1)}
-      >
-        Next
-      </button>,
-      <button
-        key="last"
-        className="pagination-btn"
-        disabled={currentPage === totalPages}
-        onClick={() => handlePageChange(totalPages)}
-      >
-        Last
-      </button>
-    );
-
-    return buttons;
-  }, [totalPages, currentPage, maxPageButtons, handlePageChange]);
-
-  // Filter modal handlers
   const [tempFilters, setTempFilters] = useState<Partial<FilterRule>[]>([]);
-
-  const openFilterModal = () => {
-    setTempFilters(filters.length > 0 ? [...filters] : [{}]);
-    setIsFilterModalOpen(true);
-  };
-
-  const applyFilters = () => {
-    const validFilters = tempFilters.filter(f => f.column && f.value) as FilterRule[];
-    updateFilters(validFilters);
-    setIsFilterModalOpen(false);
-  };
-
-  // Sort modal handlers
   const [tempSorters, setTempSorters] = useState<Partial<SortRule>[]>([]);
 
-  const openSortModal = () => {
-    setTempSorters(sorters.length > 0 ? [...sorters] : [{}]);
-    setIsSortModalOpen(true);
+  useImperativeHandle(ref, () => ({
+    openFilterModal: () => {
+      setTempFilters(filters.length > 0 ? [...filters] : [{}]);
+      setIsFilterModalOpen(true);
+    },
+    openSortModal: () => {
+      setTempSorters(sorters.length > 0 ? [...sorters] : [{}]);
+      setIsSortModalOpen(true);
+    },
+    resetFilters: () => onStateChange({ filters: [] }),
+    resetSorters: () => onStateChange({ sorters: [] }),
+  }));
+
+  const totalPages = useMemo(() => Math.ceil(totalRecords / rowsPerPage), [totalRecords, rowsPerPage]);
+
+  const handlePageChange = (page: number) => {
+    const validPage = Math.max(1, Math.min(page, totalPages || 1));
+    onStateChange({ page: validPage });
+  };
+  
+  const applyFilters = () => {
+    const validFilters = tempFilters.filter(f => f.column && f.value) as FilterRule[];
+    onStateChange({ filters: validFilters, page: 1 });
+    setIsFilterModalOpen(false);
   };
 
   const applySorters = () => {
     const validSorters = tempSorters.filter(s => s.column) as SortRule[];
-    updateSorters(validSorters);
+    // Default the order if it's missing
+    validSorters.forEach(s => { if (!s.order) s.order = 'asc'; });
+    onStateChange({ sorters: validSorters, page: 1 });
     setIsSortModalOpen(false);
   };
 
-  if (recordCount === 0) {
+  const paginationButtons = useMemo(() => {
+    if (totalPages <= 1) return null;
     return (
-      <div className={`table-container ${className}`}>
-        <div className="no-tickets">{emptyMessage}</div>
+      <div className="pagination-controls">
+        <button className="pagination-btn" disabled={currentPage === 1} onClick={() => handlePageChange(1)}>First</button>
+        <button className="pagination-btn" disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Prev</button>
+        <span className="page-indicator">Page {currentPage} of {totalPages}</span>
+        <button className="pagination-btn" disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>Next</button>
+        <button className="pagination-btn" disabled={currentPage === totalPages} onClick={() => handlePageChange(totalPages)}>Last</button>
       </div>
     );
+  }, [totalPages, currentPage]);
+  
+  if (totalRecords === 0) {
+    return ( <div className={`table-container ${className}`}><div className="no-tickets">{emptyMessage}</div></div> );
   }
 
   return (
@@ -501,7 +255,7 @@ const TableManager = forwardRef<any, TableManagerProps>(({
               </tr>
             </thead>
             <tbody>
-              {dataToRender.map((row, index) => {
+              {data.map((row, index) => {
                 const rowId = row.UserName || row.id || index;
                 return (
                   <tr key={rowId} data-id={rowId}>
@@ -543,7 +297,6 @@ const TableManager = forwardRef<any, TableManagerProps>(({
             </tbody>
           </table>
         </div>
-
         {totalPages > 1 && (
           <div className="table-footer">
             {paginationButtons}
@@ -665,6 +418,4 @@ const TableManager = forwardRef<any, TableManagerProps>(({
   );
 });
 
-// Export component and types
 export default TableManager;
-export type { TableManagerProps, TableColumn, TableAction, FilterRule, SortRule, TableState };

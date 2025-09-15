@@ -1,5 +1,5 @@
 {
-  "name": "sky_world",
+  "name": "tanstack-router-demo",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,27 +11,13 @@
   },
   "dependencies": {
     "@tanstack/react-router": "^1.131.41",
-    "@tanstack/react-router-devtools": "^1.131.41",
-    "@tanstack/zod-adapter": "^1.131.44",
-    "@tiptap/extension-link": "^3.4.2",
-    "@tiptap/extension-placeholder": "^3.4.2",
-    "@tiptap/extension-subscript": "^3.4.2",
-    "@tiptap/extension-superscript": "^3.4.2",
-    "@tiptap/extension-text-align": "^3.4.2",
-    "@tiptap/pm": "^3.4.2",
-    "@tiptap/react": "^3.4.2",
-    "@tiptap/starter-kit": "^3.4.2",
-    "@types/crypto-js": "^4.2.2",
-    "crypto-js": "^4.2.0",
+    "@tanstack/react-router-devtools": "^1.131.42",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "web-vitals": "^5.1.0",
-    "zod": "^4.1.8"
+    "react-dom": "^19.1.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
-    "@tanstack/router-vite-plugin": "^1.131.41",
-    "@types/node": "^24.3.1",
+    "@tanstack/router-vite-plugin": "^1.131.43",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react": "^5.0.0",

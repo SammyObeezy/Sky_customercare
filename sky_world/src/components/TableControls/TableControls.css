@@ -3,8 +3,8 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1.5rem;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #dee2e6;
+  background-color: #ffffff;
+  border-top: 1px solid #dee2e6;
 }
 
 .table-control-btn {
@@ -35,7 +35,8 @@
 .control-badge {
   display: inline-flex;
   align-items: center;
-  background-color: #A10900; /* Dark red */
+  background-color: #A10900;
+  /* Dark red */
   color: white;
   border-radius: 4px;
   overflow: hidden;
@@ -52,7 +53,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #740200; /* Darker red */
+  background-color: #740200;
+  /* Darker red */
   border: none;
   cursor: pointer;
   padding: 0.5rem;
@@ -60,5 +62,39 @@
 }
 
 .clear-badge:hover {
-  background-color: #4f0100; /* Even darker red */
+  background-color: #4f0100;
+  /* Even darker red */
+}
+
+.filter-sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.pagination-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.page-indicator {
+  font-size: 0.875rem;
+  color: #495057;
+  white-space: nowrap;
 }
