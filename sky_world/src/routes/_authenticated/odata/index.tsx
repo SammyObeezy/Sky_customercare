@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
+import { zodValidator } from '@tanstack/zod-adapter';
 import TableManager, { type TableColumn, type TableState, type FilterRule, type SortRule } from '../../../components/TableManager/TableManager';
 import TableControls from '../../../components/TableControls/TableControls';
 import './styles.css';
@@ -40,7 +41,7 @@ const columns: TableColumn[] = [
 ];
 
 export const Route = createFileRoute('/_authenticated/odata/')({
-  validateSearch: (search) => odataSearchSchema.parse(search),
+  validateSearch: zodValidator(odataSearchSchema),
   component: ODataPage,
 });
 

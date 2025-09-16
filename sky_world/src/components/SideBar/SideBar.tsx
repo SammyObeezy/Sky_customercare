@@ -95,6 +95,7 @@ const SideBar: React.FC = () => {
 
         <Link
           to="/odata"
+          search={{}} 
           className="nav-item"
           activeProps={{ className: 'nav-item active' }}
           title="OData"
