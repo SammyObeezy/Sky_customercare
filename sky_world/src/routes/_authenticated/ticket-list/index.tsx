@@ -4,7 +4,7 @@ import { zodValidator } from '@tanstack/zod-adapter'; // 1. ADD THIS IMPORT
 import TableManager, { type TableColumn, type TableState, type FilterRule, type SortRule } from '../../../components/TableManager/TableManager';
 import TableControls from '../../../components/TableControls/TableControls';
 import { useTickets, type Ticket } from '../../../contexts/TicketsContext';
-import './styles.css';
+import './TicketList.css';
 import { z } from 'zod';
 
 const filterRuleSchema = z.object({

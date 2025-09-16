@@ -34,7 +34,9 @@ interface TicketsContextType {
   tickets: Ticket[];
   addTicket: (ticketData: CreateTicketData) => Promise<void>;
   getTicketCounts: () => Record<string, number>;
-  updateTicket: (ticketId: number, updates: Partial<Ticket>) => void; // Add this line
+  updateTicket: (ticketId: number, updates: Partial<Ticket>) => void;
+  addAttachmentToTicket: (ticketId: number, files: File[]) => Promise<void>;
+  removeAttachmentFromTicket: (ticketId: number, attachmentId: string) => void;
 }
 
 const TicketsContext = createContext<TicketsContextType | undefined>(undefined);
@@ -273,6 +275,41 @@ export const TicketsProvider: React.FC<{ children: ReactNode }> = ({ children })
     setTickets(prevTickets => [...prevTickets, newTicket]);
   };
 
+  // Function to add attachments to an existing ticket
+  const addAttachmentToTicket = async (ticketId: number, files: File[]) => {
+    const attachmentPromises = files.map(async (file) => {
+      const dataUrl = await convertFileToDataURL(file);
+      return {
+        id: Math.random().toString(36).substr(2, 9),
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        dataUrl: dataUrl,
+      };
+    });
+
+    const newAttachments = await Promise.all(attachmentPromises);
+
+    setTickets(prevTickets =>
+      prevTickets.map(ticket =>
+        ticket.id === ticketId
+          ? { ...ticket, attachments: [...ticket.attachments, ...newAttachments] }
+          : ticket
+      )
+    );
+  };
+
+  // Function to remove an attachment from a ticket
+  const removeAttachmentFromTicket = (ticketId: number, attachmentId: string) => {
+    setTickets(prevTickets =>
+      prevTickets.map(ticket =>
+        ticket.id === ticketId
+          ? { ...ticket, attachments: ticket.attachments.filter(att => att.id !== attachmentId) }
+          : ticket
+      )
+    );
+  };
+
   // NEW: Function to update an existing ticket
   const updateTicket = (ticketId: number, updates: Partial<Ticket>) => {
     setTickets(prevTickets =>
@@ -294,7 +331,7 @@ export const TicketsProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   return (
-    <TicketsContext.Provider value={{ tickets, addTicket, getTicketCounts, updateTicket }}>
+    <TicketsContext.Provider value={{ tickets, addTicket, getTicketCounts, updateTicket, addAttachmentToTicket, removeAttachmentFromTicket }}>
       {children}
     </TicketsContext.Provider>
   );
@@ -307,5 +344,3 @@ export const useTickets = () => {
   }
   return context;
 };
-
-export default TicketsProvider;

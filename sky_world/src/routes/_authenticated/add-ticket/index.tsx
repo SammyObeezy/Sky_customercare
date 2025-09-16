@@ -26,7 +26,7 @@ import {
 import { useEditorContext } from '../../../contexts/EditorContext';
 import { useTickets } from '../../../contexts/TicketsContext';
 import { EditorContent } from '@tiptap/react';
-import './styles.css';
+import './AddTickets.css';
 
 interface AttachmentFile {
   id: string;
